@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+
+namespace Imbulechka
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string path = @"C:\Users\User\Desktop\Text work\Lines.txt";
+            StreamReader sr = new StreamReader(path);
+            string line;
+            Int64 Itog = Infinity;
+            Int64 Count = 0;
+            while ((line = sr.ReadLine()) != null)
+            {
+                 foreach (char i in line)
+                {
+                    if (i == 'a')
+                    {
+                        Count += 1;
+                    }
+                    if (i!='a' & Count!=0)
+                    {
+                        if (Count < Itog)
+                        {
+                            Itog = Count;
+                            
+                        }
+                        Count = 0;
+                    }
+                 }
+            }
+            
+            sr.Close();
+            Console.ReadLine();
+
+        }
+    }
+}
