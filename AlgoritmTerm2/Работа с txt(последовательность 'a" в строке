@@ -1,0 +1,35 @@
+string path = @"C:\Users\User\source\repos\Peremeniye1\TextWork\Text.txt";
+StreamReader sr = new StreamReader(path);
+string line;
+double Itog = double.PositiveInfinity;
+string Stroka="Нет строк с a";
+double Sravnenie = double.PositiveInfinity;
+Int64 Count = 0;
+while ((line = sr.ReadLine()) != null)
+{
+    foreach (char i in line)
+    {
+        if (i == 'a' || i == 'A')
+        {
+            Count += 1;
+        }
+        if ((Char.ToLower(i) != 'a' & Count != 0) )
+        {
+            if (Count < Itog)
+            {
+                Itog = Count;  
+            }
+            Count = 0;
+        }
+    }
+    if (Itog < Sravnenie)
+    {
+        Sravnenie = Itog;
+        Stroka = line;
+       
+    }
+}
+Console.WriteLine($"Строчка с минимальной подпоследовательностью символов 'a': {Stroka}");
+
+sr.Close();
+Console.ReadLine();
