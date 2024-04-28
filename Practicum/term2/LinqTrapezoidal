@@ -1,0 +1,37 @@
+using System.Linq;
+class TrapezoidalRule {
+    public static double Solve(Func<Double, Double> f, Double a, Double b, Double dx) {
+    double sum=0;
+    double epsilon = 1E-7;
+    double Edge;
+    if (!double.IsNormal(a)) {throw new ArgumentException ("Not a number");}
+    if (!double.IsNormal(b)) {throw new ArgumentException ("Not a number");}
+    if (dx<epsilon) {throw new ArgumentException ("step is lower than epsilon");}
+    int count = Convert.ToInt32(Math.Floor((b-a)/dx));
+    double k = (b-a)/dx - (Math.Floor((b-a)/dx));
+    k = k*dx;
+    if (k<=epsilon)
+    {
+        Edge=0;
+    }
+    else
+    {
+        Edge=Math.Abs(((f(b-k)+f(b))*k)/2);
+    }
+    double[] WhereIsX = Enumerable.Range(1,count).Select(i => a+dx*i).ToArray();
+    var P=
+    from i in WhereIsX
+    select Math.Abs(((f(i-dx)+f(i))*dx)/2);
+    foreach(double x in P)
+    {
+        sum+=x;
+    }
+    sum+=Edge;
+    return sum;
+    }
+}
+Func<double, double> f = (double x) => -x*x+9;
+double a = 1;
+double b = 4;
+double dx = 0.1;
+TrapezoidalRule.Solve(f,a,b,dx)
