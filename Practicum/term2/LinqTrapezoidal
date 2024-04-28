@@ -1,7 +1,6 @@
 using System.Linq;
 class TrapezoidalRule {
     public static double Solve(Func<Double, Double> f, Double a, Double b, Double dx) {
-    double sum=0;
     double epsilon = 1E-7;
     double Edge;
     if (!double.IsNormal(a)) {throw new ArgumentException ("Not a number");}
@@ -22,12 +21,7 @@ class TrapezoidalRule {
     var P=
     from i in WhereIsX
     select Math.Abs(((f(i-dx)+f(i))*dx)/2);
-    foreach(double x in P)
-    {
-        sum+=x;
-    }
-    sum+=Edge;
-    return sum;
+    return P.Sum()+Edge;
     }
 }
 Func<double, double> f = (double x) => -x*x+9;
