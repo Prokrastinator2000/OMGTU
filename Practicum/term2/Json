@@ -1,0 +1,32 @@
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.IO;
+using System.Linq;
+class Students
+{
+    public string Name {get;set;}
+    public string Group {get;set;}
+    public string Discipline {get;set;}
+    public int Mark {get;set;}
+}
+class Task
+{
+    public string taskName{get;set;}
+    public Students[] data{get;set;}
+}
+string path = @"C:\Users\User\Desktop\Json\Stud.txt";
+StreamReader sr = new StreamReader(path);
+string json = sr.ReadToEnd();
+Task person = JsonConvert.DeserializeObject<Task>(json);
+Console.WriteLine($"taskName: {person.data[0].Name}");
+JObject rss = JObject.Parse(json);
+if (person.taskName == "GetStudentsWithHighestGPA")
+{ var P= 
+    from x in rss["data"]
+    where (int)x["mark"] == 5
+    select x["mark"];
+foreach (int i in P)
+{
+    Console.WriteLine(i);
+}
+}
