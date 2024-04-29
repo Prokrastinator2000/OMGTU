@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Linq1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            List<string> Spisok = new List<string> { "Зачем", "Ei", "Vse", "Shelka", "Tsvetniye", "Oblaka", "3achemVseEto","3acheemm" };
+            var G = GetText(Spisok).ToList();
+            int Count = G.Count();
+            foreach (string i in G)
+            {
+                Console.WriteLine(i);
+            }
+            Console.WriteLine("-------");
+            for (int i = 0; i <Count;i++ )
+            {
+        
+                G.Remove(G[i]);
+                
+            }
+            
+
+                Console.ReadLine();
+        }
+        public static IEnumerable<string> GetText(List<string> Spisok)
+        {
+            var P =
+                from x in Spisok
+                where x.Length % 2 == 0
+                select x;
+            return P;
+        }
+    
+    }
+}
