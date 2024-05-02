@@ -10,9 +10,9 @@ namespace Linq1
     {
         static void Main(string[] args)
         {
-            List<string> Spisok = new List<string> { "Зачем", "Ei", "Vse", "Shelka", "Tsvetniye", "Oblaka", "3achemVseEto","3acheemm","Мармеладка","Pes","Planetaa" };
+            List<string> Spisok = new List<string> { "Зачем", "Ei", "Vse", "Shelka", "Tsvetniye", "Oblaka", "3achemVseEto", "3acheemm", "Мармеладка", "Pes" };
             List<string> G = GetText(Spisok).ToList();
-            int Count = G.Count();
+            int Count = Spisok.Count();
             Console.WriteLine("Первая выборка");
             foreach (string i in G)
             {
@@ -20,38 +20,38 @@ namespace Linq1
             }
             Console.WriteLine("-------");
             Console.WriteLine("После удаления каждого второго элемента:");
-            if (Count%2!=0)
+            if (Count % 2 != 0)
             {
-                for (int i = Count -2;i>0;i--)
+                for (int i = Count - 2; i > 0; i--)
                 {
-                    if (i % 2 !=0)
+                    if (i % 2 != 0)
                     {
-                        G.RemoveAt(i);
+                        Spisok.RemoveAt(i);
                     }
                 }
             }
             else
             {
-                for(int i = Count -1;i>0;i--)
+                for (int i = Count - 1; i > 0; i--)
                 {
                     if (i % 2 != 0)
                     {
-                        G.RemoveAt(i);
+                        Spisok.RemoveAt(i);
                     }
                 }
             }
-            foreach (string i in G)
+            foreach (string i in Spisok)
             {
                 Console.WriteLine(i);
             }
-            G = GetText(G).ToList();
+            G = GetText(Spisok).ToList();
             Console.WriteLine("------");
             Console.WriteLine("Второе использование выборки:");
             foreach (string i in G)
             {
                 Console.WriteLine(i);
             }
-                Console.ReadLine();
+            Console.ReadLine();
         }
         public static IEnumerable<string> GetText(List<string> Spisok)
         {
@@ -61,6 +61,6 @@ namespace Linq1
                 select x;
             return P;
         }
-    
+
     }
 }
