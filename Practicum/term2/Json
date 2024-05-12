@@ -36,18 +36,33 @@ if (person.taskName == "GetStudentsWithHighestGPA")
     JObject Otvet = new JObject();
     Otvet["Response"] = new JArray(Students);
     sw.WriteLine(Otvet);
-    
 }
 if (person.taskName == "CalculateGPAByDiscipline")
 { 
+    
     var GpaDiscipline = 
     from x in rss["data"]
     group x by x["discipline"] into g
-    select new JObject(g.Average(x => (int)x["mark"]));
+    select new JObject{{(string)g.Key, g.Average(x => (int)x["mark"]) }};
     JObject Otvet = new JObject();
     Otvet["Response"] = new JArray(GpaDiscipline);
     sw.WriteLine(Otvet);
-    
+}
+if (person.taskName == "GetBestGroupsByDiscipline")
+{ 
+    var Max =
+    (from x in person.data
+    group x by new{x.Discipline,x.Group} into g
+    select g.Average(x => (int)x.Mark)).Max();
+    var GroupGPA =
+    from x in person.data
+    group x by new{x.Discipline,x.Group} into g
+    where g.Average(x => (int)x.Mark) == Max
+    select new JObject{{"Discipline",g.Key.Discipline},{"Group", g.Key.Group},{"GPA",g.Average(x => (int)x.Mark)} };
+    JObject Otvet = new JObject();
+    Otvet["Response"] = new JArray(GroupGPA.Reverse());
+    sw.WriteLine(Otvet);
+
 }
 sr.Close();
 sw.Close();
