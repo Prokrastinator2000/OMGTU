@@ -14,19 +14,40 @@ class Task
     public string taskName{get;set;}
     public Students[] data{get;set;}
 }
-string path = @"C:\Users\User\Desktop\Json\Stud.txt";
-StreamReader sr = new StreamReader(path);
+string InputPath = @"C:\Users\User\source\repos\Practicum\Jsoninput.txt";
+string OutputPath = @"C:\Users\User\source\repos\Practicum\JsonOutput.txt";
+StreamReader sr = new StreamReader(InputPath);
+StreamWriter sw = new StreamWriter(OutputPath);
 string json = sr.ReadToEnd();
 Task person = JsonConvert.DeserializeObject<Task>(json);
-Console.WriteLine($"taskName: {person.data[0].Name}");
+//Console.WriteLine($"taskName: {person.data[0].Name}");
 JObject rss = JObject.Parse(json);
+var maxGPA = 
+(from x in rss["data"]
+group x by x["name"] into g
+select g.Average(x => (int)x["mark"])).Max();
 if (person.taskName == "GetStudentsWithHighestGPA")
-{ var P= 
+{ 
+    var Students =
     from x in rss["data"]
-    where (int)x["mark"] == 5
-    select x["mark"];
-foreach (int i in P)
-{
-    Console.WriteLine(i);
+    group x by x["name"] into g
+    where g.Average(x => (int)x["mark"]) == maxGPA
+    select new JObject{{"Cadet",g.Key},{"GPA", (int)g.Average(x => (int)x["mark"])}} ;
+    JObject Otvet = new JObject();
+    Otvet["Response"] = new JArray(Students);
+    sw.WriteLine(Otvet);
+    
 }
+if (person.taskName == "CalculateGPAByDiscipline")
+{ 
+    var GpaDiscipline = 
+    from x in rss["data"]
+    group x by x["discipline"] into g
+    select new JObject(g.Average(x => (int)x["mark"]));
+    JObject Otvet = new JObject();
+    Otvet["Response"] = new JArray(GpaDiscipline);
+    sw.WriteLine(Otvet);
+    
 }
+sr.Close();
+sw.Close();
