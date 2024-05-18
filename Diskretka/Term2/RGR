@@ -1,0 +1,92 @@
+import math
+import copy
+inf = math.inf
+def work():
+    path = str(input("Введите путь к текстовому файлу с матрицей весов: "))
+    try:
+        file = open(path)
+        Matrix1 = [[float(num) for num in line.split(',')] for line in file]
+        for i in range(len(Matrix1)):
+            for j in range(len(Matrix1)):
+                if Matrix1[i][j] != inf:
+                    Matrix1[i][j] = int(Matrix1[i][j])
+        return Matrix1
+    except:
+        print("Неправильный ввод")
+    finally:
+        file.close()
+
+def work1 (Matrix):
+    Otvet = []
+    Orig = copy.deepcopy(Matrix)
+    stroka = [inf] * len(Matrix)
+    stolbec = [0] * len(Matrix)
+    List = []
+    min = inf
+    start = int(input("Введите номер начальной вершины: "))  # Начало
+    end = int(input("Введите номер конечной вершины: ")) # Конец
+    Otvet.append(start)
+    Otvet.append(end)
+    j = 0
+    startpos = start
+    index = 0
+    while True:
+        for k in range(5):
+            Matrix[k][start - 1] = inf
+        for i in Matrix[start - 1]:
+            if i + stolbec[start - 1] < stroka[Matrix[start - 1].index(i)]:
+                stroka[Matrix[start - 1].index(i)] = i + stolbec[start - 1]
+        while j != len(stroka):
+            if stroka[j] != inf:
+                if type(stroka[j]) == int:
+                    if stroka[j] <= min and not (j in List):
+                        min = stroka[j]
+                        index = j
+            j += 1
+        j = 0
+        List.append(index)
+        stolbec[index] = min
+        start = index + 1
+        min = inf
+        if stolbec[end - 1] != 0:
+            break
+    dist = stolbec[end - 1]
+    Otvet.append(dist)
+    road = [end]
+    roadstr = ''
+    b = 0
+    while dist != 0:
+        i = 0
+        while i < len(Orig[end - 1]):
+            if (dist - Orig[i][end - 1] == stolbec[i]):
+                if dist - Orig[i][end - 1] == 0 and i != startpos - 1:
+                    b = 1
+                if b != 1:
+                    dist = dist - Orig[i][end - 1]
+                    road.append(i + 1)
+                    end = i + 1
+                    i = inf
+            b = 0
+            i += 1
+    for i in range(1, len(road) + 1):
+        roadstr = roadstr + str(road[-i]) + '->'
+    print("Первый район: " , Otvet[0] , " Второй район: " , Otvet[1] , " Расстояние: " , Otvet[2])
+
+def menu():
+    while True:
+        c = int(input("1. Вычисление\n2. Описание задачи\n3. Данные об авторе\n4. Выход\nВведите цифру для выбора пункта меню: "))
+        if c == 1:
+            Matrix = work()
+            work1(Matrix)
+            input("Нажмите любую клавишу для выхода в главное меню")
+        elif c == 2:
+            print("")
+            input("Нажмите любую клавишу для выхода в главное меню")
+        elif c == 3:
+            print("Автор программы: Ильин М.В. ФИТ-231")
+            input("Нажмите любую клавишу для выхода в главное меню")
+        elif c == 4:
+            return
+        else:
+            print("Выбрана неверная опция")
+menu()
