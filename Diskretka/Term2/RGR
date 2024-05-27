@@ -1,3 +1,4 @@
+
 import math
 import copy
 inf = math.inf
@@ -42,8 +43,12 @@ def work1 (Matrix):
                     if stroka[j] <= min and not (j in List):
                         min = stroka[j]
                         index = j
+
             j += 1
         j = 0
+        if min == inf:
+            print("Первый район: ", Otvet[0], " Второй район: ", Otvet[1], " Расстояние: -1")
+            return
         List.append(index)
         stolbec[index] = min
         start = index + 1
@@ -80,7 +85,7 @@ def menu():
             work1(Matrix)
             input("Нажмите любую клавишу для выхода в главное меню")
         elif c == 2:
-            print("")
+            print("Необходимо определить наиболее эффективные маршруты пересылки сообщений между двумя любыми районами. Во входном файле записана матрица весов графа в виде строк с числами через запятую, каждая строка соответствует строке в матрице")
             input("Нажмите любую клавишу для выхода в главное меню")
         elif c == 3:
             print("Автор программы: Ильин М.В. ФИТ-231")
