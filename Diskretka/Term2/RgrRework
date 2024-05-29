@@ -1,0 +1,69 @@
+import math
+import copy
+
+inf = math.inf
+
+def work():
+    path = input("Введите путь к текстовому файлу с матрицей весов: ")
+    try:
+        with open(path) as file:
+            Matrix1 = [[float(num) if num.strip() != 'inf' else inf for num in line.split(',')] for line in file]
+            for i in range(len(Matrix1)):
+                for j in range(len(Matrix1[i])):
+                    if Matrix1[i][j] != inf:
+                        Matrix1[i][j] = int(Matrix1[i][j])
+        return Matrix1
+    except Exception as e:
+        print("Ошибка при чтении файла:", e)
+        return None
+
+def find_shortest_path(Matrix, start, end):
+    n = len(Matrix)
+    distance = [inf] * n
+    visited = [False] * n
+    prev = [-1] * n
+    distance[start - 1] = 0
+    for _ in range(n):
+        u = min_distance_vertex(distance, visited)
+        visited[u] = True
+        for v in range(n):
+            if not visited[v] and Matrix[u][v] != inf and distance[u] != inf and distance[u] + Matrix[u][v] < distance[v]:
+                distance[v] = distance[u] + Matrix[u][v]
+                prev[v] = u
+    if distance[end - 1] == inf:
+        print(f"Кратчайшее расстояние между вершинами {start} и {end}: -1")
+    else:
+        print(f"Кратчайшее расстояние между вершинами {start} и {end}: {distance[end - 1]}")
+def min_distance_vertex(distance, visited):
+    min_distance = inf
+    min_vertex = -1
+    n = len(distance)
+    for v in range(n):
+        if not visited[v] and distance[v] < min_distance:
+            min_distance = distance[v]
+            min_vertex = v
+    return min_vertex
+def work1(Matrix):
+    n = len(Matrix)
+    for start in range(1, n + 1):
+        for end in range(start + 1, n + 1):
+            find_shortest_path(Matrix, start, end)
+def menu():
+    while True:
+        try:
+            c = int(input("1. Вычисление\n2. Описание задачи\n3. Данные об авторе\n4. Выход\nВведите цифру для выбора пункта меню: "))
+            if c == 1:
+                Matrix = work()
+                if Matrix:
+                    work1(Matrix)
+            elif c == 2:
+                print("Телефонная компания обслуживает шесть удаленных друг от друга районов, которые связаны сетью.\nКомпании необходимо определить наиболее эффективные маршруты пересылки сообщений между любыми двумя районами.\nВо входном файле записана матрица весов графа в виде строк с числами через запятую, каждая строка соответствует строке в матрице")
+            elif c == 3:
+                print("Автор программы: Ильин М.В. ФИТ-231")
+            elif c == 4:
+                return
+            else:
+                print("Выбрана неверная опция")
+        except ValueError:
+            print("Пожалуйста, введите целое число.")
+menu()
