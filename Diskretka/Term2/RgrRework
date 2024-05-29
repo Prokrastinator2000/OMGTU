@@ -1,8 +1,6 @@
 import math
 import copy
-
 inf = math.inf
-
 def work():
     path = input("Введите путь к текстовому файлу с матрицей весов: ")
     try:
@@ -16,7 +14,6 @@ def work():
     except Exception as e:
         print("Ошибка при чтении файла:", e)
         return None
-
 def find_shortest_path(Matrix, start, end):
     n = len(Matrix)
     distance = [inf] * n
