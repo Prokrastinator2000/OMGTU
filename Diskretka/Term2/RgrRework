@@ -1,5 +1,4 @@
 import math
-import copy
 inf = math.inf
 def work():
     path = input("Введите путь к текстовому файлу с матрицей весов: ")
