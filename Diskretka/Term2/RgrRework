@@ -27,9 +27,9 @@ def find_shortest_path(Matrix, start, end):
                 distance[v] = distance[u] + Matrix[u][v]
                 prev[v] = u
     if distance[end - 1] == inf:
-        print(f"Кратчайшее расстояние между вершинами {start} и {end}: -1")
+        print(f"Кратчайшее расстояние между районами {start} и {end}: -1")
     else:
-        print(f"Кратчайшее расстояние между вершинами {start} и {end}: {distance[end - 1]}")
+        print(f"Кратчайшее расстояние между районами {start} и {end}: {distance[end - 1]}")
 def min_distance_vertex(distance, visited):
     min_distance = inf
     min_vertex = -1
