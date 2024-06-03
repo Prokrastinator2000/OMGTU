@@ -1,0 +1,47 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Collections;
+
+namespace ConsoleApplication6
+{
+    class Program
+    {
+         static void Main(string[] args)
+        {
+            Dictionary<string, int> Minutes = new Dictionary<string, int>();
+            Queue<string> Telephons = new Queue<string>();
+            Telephons.Enqueue("990 2020-01-01 9:00 10");
+            Telephons.Enqueue("790 2020-01-01 9:20 12");
+            Telephons.Enqueue("790 2020-01-01 9:30 15");
+            Telephons.Enqueue("690 2020-01-02 10:10 50");
+            Telephons.Enqueue("590 2020-01-01 14:00 30");
+            Telephons.Enqueue("990 2020-01-02 21:00 5");
+            Telephons.Enqueue("990 2020-01-02 17:00 9");
+            while (Telephons.Count > 0)
+            {
+                string[] information = Telephons.Dequeue().Split();
+                string Data = information[1];
+                int Time = Convert.ToInt32((information[3]));
+                if (Minutes.ContainsKey(Data))
+                {
+                    Minutes[Data] += Time;
+                }
+                else
+                {
+                    Minutes.Add(Data, Time);
+                }
+                
+                   
+            }
+            Console.WriteLine("Месячный отчет по общей сумме разговоров: ");
+            foreach (var i in Minutes)
+            {
+                Console.WriteLine("Дата: {0}, Общее количество минут: {1}", i.Key, i.Value);
+            }
+            Console.ReadLine();
+        }
+    }
+}
