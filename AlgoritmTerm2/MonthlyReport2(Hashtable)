@@ -1,0 +1,61 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Collections;
+
+namespace ConsoleApplication6
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Hashtable Minutes = new Hashtable();
+            Queue<Calling> Telephons = new Queue<Calling>();
+            Telephons.Enqueue(new Calling("990", "2020-01-01", "9:00", 10));
+            Telephons.Enqueue(new Calling("790", "2020-01-01", "9:20", 12));
+            Telephons.Enqueue(new Calling("790", "2020-01-01","9:30", 15));
+            Telephons.Enqueue(new Calling("690", "2020-01-02", "10:10", 50));
+            Telephons.Enqueue(new Calling("590", "2020-01-01", "14:00", 30));
+            Telephons.Enqueue(new Calling("990" ,"2020-01-02", "21:00", 5));
+            Telephons.Enqueue(new Calling("990","2020-01-02", "17:00", 9));
+            while (Telephons.Count > 0)
+            {
+                Calling Object = Telephons.Dequeue();
+                string Data = Object.Data;
+                int Time = Object.Dlitelnost;
+                if (Minutes.ContainsKey(Data))
+                {
+                    Minutes[Data] = (int)Minutes[Data] + Time;
+                }
+                else
+                {
+                    Minutes.Add(Data, Time);
+                }
+
+            }
+            Console.WriteLine("Месячный отчет по общей сумме разговоров: ");
+            foreach (DictionaryEntry i in Minutes)
+            {
+                Console.WriteLine("Дата: {0}, Минуты: {1}", i.Key,i.Value);
+            }
+            Console.ReadLine();
+        }
+   
+   }
+     class Calling
+     {
+         public string Nomer;
+         public string Data;
+         public string TimeOfStart;
+         public int Dlitelnost;
+         public Calling (string Nomer, string Data, string TimeOfStart,int Dlitelnost)
+         {
+             this.Nomer = Nomer;
+             this.Data = Data;
+             this.TimeOfStart = TimeOfStart;
+             this.Dlitelnost = Dlitelnost;
+         }
+     }
+}
