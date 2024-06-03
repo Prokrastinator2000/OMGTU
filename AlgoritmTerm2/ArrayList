@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Collections;
+
+namespace ConsoleApplication6
+{
+    class Program
+    {
+        public static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.WriteLine("Введите цифру для выбора пункта меню\n1. Count\n2. BinSearch\n3. Copy\n4. IndexOf\n5. Insert\n6. Reverse\n7. Sort\n8. Add\n0. Выход из программы");
+                int k = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine();
+                ArrayList array = new ArrayList(5) { 3, -8, -24, 24, 7 };
+                if (k == 0)
+                {
+                    break;
+                }
+                if (k == 1)
+                {
+                    int numbers = array.Count;
+                    Console.Write("Количество элементов в массиве: ");
+                    Console.WriteLine(numbers);
+                    Console.WriteLine();
+                }
+                if (k == 2)
+                {
+
+                    array.Sort();
+                    int chizlo = array.BinarySearch(7);
+                    Console.Write("Данное число стоит под индексом: ");
+                    Console.WriteLine(chizlo);
+                    Console.WriteLine();
+                }
+                if (k == 3)
+                {
+                    int[] Copiya = new int[array.Count];
+                    array.CopyTo(Copiya);
+                    Console.WriteLine("Скопированный массив: ");
+                    foreach(int i in Copiya)
+                    {
+                        Console.Write(i + " ");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+                if(k == 4)
+                {
+                    
+                    int Indeoxof = array.IndexOf(-24,0,5);
+                    if(Indeoxof == -1)
+                    {
+                        Console.WriteLine("Данный элемент отсутствует в массиве!");
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Индекс первого вхождения данного элемента: ");
+                        Console.WriteLine(Indeoxof);
+                    }
+                }
+                if(k == 5)
+                {
+                    array.Insert(3, 100);
+                    Console.WriteLine("Измененный массив: ");
+                    foreach (int i in array)
+                    {
+                        Console.Write(i + " ");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+                if (k==6)
+                {
+                    array.Reverse();
+                    Console.WriteLine("Реверснутый список");
+                    foreach (int i in array)
+                    {
+                        Console.Write(i + " ");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+                if(k==7)
+                {
+                    array.Sort();
+                    Console.WriteLine("Отсортированный список");
+                    foreach (int i in array)
+                    {
+                        Console.Write(i + " ");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+                if (k==8)
+                {
+                    Console.WriteLine("Добавить эллемент в конец массива");
+                    array.Add(300);
+                    foreach (int i in array)
+                    {
+                        Console.Write(i + " ");
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+            }
+        }
+    }
+}
