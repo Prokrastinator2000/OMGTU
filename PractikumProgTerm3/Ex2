@@ -1,0 +1,63 @@
+import numpy as np
+import scipy as sci
+import sympy as scy
+# Определяем функцию
+def f(x):
+    return np.sin(2 * x) / np.cos(x)
+a = 2
+b = 3
+# Точка, в которой нужно найти производные
+x0 = 2
+
+# Вычисляем первую и вторую производные
+def first_derivative(x):
+    return sci.misc.derivative(f, x, dx=1e-6, n=1)
+
+def second_derivative(x):
+    return sci.misc.derivative(f, x, dx=1e-6, n=2)
+
+# Результаты
+first_deriv = first_derivative(x0)
+second_deriv = second_derivative(x0)
+
+print(f"Первая производная в точке x0 = {x0}: {first_deriv}")
+print(f"Вторая производная в точке x0 = {x0}: {second_deriv}")
+
+x = scy.symbols('x')
+expr = scy.sin(2*x)/scy.cos(x)
+print("Expression : {}".format(expr))
+
+# Используем метод sympy.Derivative()
+expr_diff = scy.Derivative(expr, x)
+#print("Derivative of expression with respect to x : {}".format(expr_diff))
+print("Символьное представление производной : {}".format(expr_diff.doit()))
+print(f"Определенный интеграл(результат, погрешность): {sci.integrate.quad(f,a,b)}")
+print(f"Неопределенный интеграл: {scy.integrate(expr,x)}")
+def NonlinearFunc(x):
+    x1,x2=x
+    return (x1-3)**2 +(x2-8)**2
+def constraint1(x):
+    return -2*x[0]+x[1]-2  # -2x1 + x2 = 2  ==> x2 = -2x1 + 2
+
+def constraint2(x):
+    return 3 * x[0] + 4 * x[1] + 6  # 3x1 + 4x2 >= -6
+
+# Начальные значения
+x0 = np.array([0, 0])
+
+# Ограничения в нужном формате
+constraints = [{'type': 'eq', 'fun': constraint1},  # равенство
+               {'type': 'ineq', 'fun': constraint2}]  # неравенство
+
+# Границы для переменных
+bounds = [(0, None), (0, None)]  # x1 >= 0, x2 >= 0
+
+# Решение задачи
+solution = sci.optimize.minimize(NonlinearFunc, x0, method='SLSQP', bounds=bounds, constraints=constraints)
+
+# Вывод результата
+if solution.success:
+    print("Оптимальное решение:", solution.x)
+    print("Минимальное значение целевой функции:", solution.fun)
+else:
+    print("Не удалось найти решение:", solution.message)
