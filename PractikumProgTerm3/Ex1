@@ -1,47 +1,76 @@
 import numpy as np
 def MatrixInvis(mat):
-    for row in mat:
-        for cell in row:
-            if (cell - int(cell) == 0.0):
-                print ('\n'.join(' '.join(str(int(cell)) for cell in row) for row in mat))
-            else:
-                print('\n'.join(' '.join(str(cell)) for cell in row) for row in mat))
+    #for row in mat:
+        #for cell in row:
+            #if (cell - int(cell) == 0.0):
+
+                print ('\n'.join(' '.join(str(int(cell))  if (cell - int(cell) == 0.0) else str(cell)[:8] for cell in row) for row in mat))
+            #else:
+                #print('\n'.join(' '.join(str(cell)) for cell in row) for row in mat)
+print("----------------1------------------")
 my_array = np.arange(10,70,2)
-print(my_array)
-print("-----------------------------------")
+print('Массив элементами которого являются числа от 10 до 70 с шагом 2')
+print(*my_array)
+print("----------------2------------------")
 A = my_array.reshape(6,5)
+print('Преобразование массива в матрицу A(6x5)')
+MatrixInvis(A)
+print('Транспонирование матрицы A на матрицу A(5x6)')
 A = np.transpose(A)
 MatrixInvis(A)
-print("-----------------------------------")
+print("----------------3------------------")
 A = A * 2.5
 A[0]=A[0]-5
+print('Матрица A, в которой все элементы помножены на 2.5, а из всех элементов первой строки вычли 5')
 MatrixInvis(A)
-print("-----------------------------------")
-B = np.random.randint (0,10,(6,3))
+print("----------------4------------------")
+B = np.random.random (size=(6,3))
+B = B*10
+print('Матрица B(6x3), заполненная случайными действительными числами от 0 до 10')
 MatrixInvis(B)
-print("-----------------------------------")
+print("----------------5------------------")
 a = np.sum(A,axis=1)
-print(len(a))
+print("Размер полученного вектора а, элементами которого является суммы по всем строкам матрицы А:",len(a))
 b = np.sum(B, axis=0)
-print(len(b))
-print("-----------------------------------")
+print("Размер полученного вектора b, элементами которого является суммы по всем столбцам матрицы B:",len(b))
+print("----------------6------------------")
+print('Произведение матрицы A и B')
 MatrixInvis(np.dot(A,B))
-print("-----------------------------------")
+print("----------------7------------------")
 A=np.delete(A,2,1) #7.1
+print('Матрица А, из которой удалили третий столбец')
 MatrixInvis(A)
-B=np.insert(B,3,np.random.randint(10,20,(3,6)),1) #7.2
+B=np.insert(B,3,np.random.uniform(10,20,(3,6)),1) #7.2
+print('Матрица В, в которой добавили три столбца из случайных чисел от 10 до 20')
 MatrixInvis(B)
-print("-----------------------------------")
-detA = np.linalg.det(A)
-print(detA)
-detB = np.linalg.det(B)
-print(detB)
-reverseB = np.linalg.pinv(B)
-MatrixInvis(reverseB)
-print("-----------------------------------")
+print("----------------8------------------")
+#detA = np.linalg.det(A)
+print('Определитель матрицы А')
+if (np.linalg.det(A) - int(np.linalg.det(A)) == 0.0):
+    print(int(np.linalg.det(A)))
+print('Определитель матрицы В')
+if (np.linalg.det(B) - int(np.linalg.det(B)) == 0.0):
+    detB = int(np.linalg.det(B))
+    print(detB)
+else:
+    detB = np.linalg.det(B)
+    print(detB)
+print('Обратная матрицы В')
+if detB==0:
+    print('Обртной матрицы не существует')
+else:
+    MatrixInvis(np.linalg.pinv(B))
+#detB = np.linalg.det(B)
+#print(detB)
+#reverseB = np.linalg.pinv(B)
+#MatrixInvis(reverseB)
+print("----------------9------------------")
+print('Матрица А в 6 степени')
 MatrixInvis(np.linalg.matrix_power(A,6))
+print('Матрица В в 14 степени')
 MatrixInvis(np.linalg.matrix_power(B,14))
-print("-----------------------------------")
+print("----------------10------------------")
+print('Решение системы уравнений \nВариант 6')
 D = np.array([[1,-4,2,1.4],[2,-3.5,9,0],[7,5,-4,3],[1,2,3,4]])
 E = np.array([20,7.8,-6,6])
 X = np.linalg.solve(D,E)
