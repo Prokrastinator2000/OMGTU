@@ -55,11 +55,16 @@ if (np.linalg.det(B) - int(np.linalg.det(B)) == 0.0):
 else:
     detB = np.linalg.det(B)
     print(detB)
-print('Обратная матрицы В')
+if np.linalg.det(A)==0:
+    print("Обратной матрицы к A не существует")
+else:
+    MatrixInvis(np.linalg.pinv(A))
+print('Обратная к матрице В')
 if detB==0:
-    print('Обртной матрицы не существует')
+    print('Обратной матрицы не существует')
 else:
     MatrixInvis(np.linalg.pinv(B))
+
 #detB = np.linalg.det(B)
 #print(detB)
 #reverseB = np.linalg.pinv(B)
