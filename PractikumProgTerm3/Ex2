@@ -25,13 +25,22 @@ print(f"Вторая производная в точке x0 = {x0}: {second_der
 
 x = scy.symbols('x')
 expr = scy.sin(2*x)/scy.cos(x)
-print("Expression : {}".format(expr))
+print("Выражение : {}".format(expr))
 
 # Используем метод sympy.Derivative()
 expr_diff = scy.Derivative(expr, x)
 #print("Derivative of expression with respect to x : {}".format(expr_diff))
 print("Символьное представление производной : {}".format(expr_diff.doit()))
 print(f"Определенный интеграл(результат, погрешность): {sci.integrate.quad(f,a,b)}")
+def Sovlve(f,a,b,n):
+    sum = 0
+    dx=(b-a)/n
+    for i in range(n):
+        x=a+i*dx
+        sum+=f(x)
+    sum*=dx
+    return sum
+print(Sovlve(f,a,b,1000))
 print(f"Неопределенный интеграл: {scy.integrate(expr,x)}")
 def NonlinearFunc(x):
     x1,x2=x
