@@ -31,8 +31,8 @@ print("Выражение : {}".format(expr))
 expr_diff = scy.Derivative(expr, x)
 #print("Derivative of expression with respect to x : {}".format(expr_diff))
 print("Символьное представление производной : {}".format(expr_diff.doit()))
-print(f"Определенный интеграл(результат, погрешность): {sci.integrate.quad(f,a,b)}")
-def Sovlve(f,a,b,n):
+print("Определенный интеграл:")
+def Solve(f,a,b,n):
     sum = 0
     dx=(b-a)/n
     for i in range(n):
@@ -40,7 +40,7 @@ def Sovlve(f,a,b,n):
         sum+=f(x)
     sum*=dx
     return sum
-print(Sovlve(f,a,b,1000))
+print(Solve(f,a,b,1000))
 print(f"Неопределенный интеграл: {scy.integrate(expr,x)}")
 def NonlinearFunc(x):
     x1,x2=x
@@ -70,3 +70,4 @@ if solution.success:
     print("Минимальное значение целевой функции:", solution.fun)
 else:
     print("Не удалось найти решение:", solution.message)
+print (solution)
