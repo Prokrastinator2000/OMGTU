@@ -1,0 +1,166 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import sympy as sp
+from Practicum2 import f, NonlinearFunc  # Импорт функций
+from Practicum3 import x1, x2          # Импорт переменных
+
+
+# a = 2, b = 3
+
+# 1
+print("№1")
+arguments = np.arange(2, 3 + 0.1, 0.1)
+#
+values = np.array([f(x) for x in arguments])
+print(values)
+
+# 2
+print("№2")
+plt.plot(arguments, values, label="sin(2x)/cos(x)")
+plt.xlabel("Значения X", fontsize=10)
+plt.ylabel("Значения F(X)", fontsize=10)
+plt.xticks(arguments)
+plt.title("График функции", fontsize=12)
+plt.legend()
+plt.show()
+
+# 3
+print("№3")
+
+rgb_color = (1, 0, 0)
+plt.plot(arguments, values, label="sin(2x)/cos(x)", marker="o", color=rgb_color)
+plt.xlabel("Значения X", fontsize=10)
+plt.ylabel("Значения F(X)", fontsize=10)
+plt.xticks(arguments)
+plt.grid(True, color='gray', alpha=0.5)
+plt.title("График функции №2", fontsize=12)
+plt.legend(loc="upper right", fontsize=12)
+plt.show()
+
+# 4
+print("№4")
+
+plt.hist(x2, bins=10, color='blue', edgecolor='black')
+
+plt.title("Гистограмма нормального распределения")
+plt.xlabel("Числовые диапазоны")
+plt.ylabel("Частота")
+plt.show()
+
+plt.hist(x1, bins=5, color='green', edgecolor='black')
+
+plt.title("Гистограмма равномерного распределения")
+plt.xlabel("Числовые диапазоны")
+plt.ylabel("Частота")
+plt.show()
+
+# 5
+print("№5")
+
+uniform_vector_50 = np.random.randint(low=0, high=5, size=50)
+
+print(uniform_vector_50)
+
+unique, counts = np.unique(uniform_vector_50, return_counts=True)
+print(unique)
+print(counts)
+
+plt.pie(counts, labels=unique, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
+plt.title("Круговая диаграмма частот")
+plt.show()
+
+plt.bar(unique, counts, color='skyblue', edgecolor='black')
+
+for i in range(len(unique)):
+    plt.text(unique[i], counts[i], str(counts[i]), ha="center", va="bottom")
+
+
+plt.title("Столбчатая диаграмма частот")
+plt.xlabel("Числа")
+plt.ylabel("Частота")
+plt.xticks(unique)
+plt.show()
+
+# 6
+print("№6")
+x_range = np.arange(-10, 10, 0.5)
+y_range = np.arange(-10, 10, 0.5)
+
+X, Y = np.meshgrid(x_range, y_range)
+Z = np.array([NonlinearFunc((x, y)) for x, y in zip(np.ravel(X), np.ravel(Y))]).reshape(X.shape)
+
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.contour3D(X, Y, Z, 100, colors="red")
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
+plt.show()
+
+# 7
+print("№7")
+fig, axs = plt.subplots(2, 2, figsize=(8, 6))
+
+# Добавляем данные в каждую ячейку
+axs[0, 0].plot(arguments, values, label="sin(2x)/cos(x)")
+axs[0, 0].set_title("График 1")  # Верхний левый
+axs[0, 0].legend()
+axs[0, 0].set_facecolor('#f0f8ff')
+
+
+axs[0, 1].plot(arguments, values, label="sin(2x)/cos(x)")
+axs[0, 1].set_title("График 2")  # Верхний правый
+axs[0, 1].legend()
+axs[0, 1].set_facecolor('#ffe4e1')
+
+axs[1, 0].pie(counts, labels=unique, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
+axs[1, 0].set_title("График 3")  # Нижний левый
+axs[1, 0].set_facecolor('#e6ffe6')
+
+ax_3d = fig.add_subplot(2, 2, 4, projection='3d')
+ax_3d.plot_surface(X, Y, Z, cmap='viridis')
+ax_3d.set_title("График 4")
+
+fig.suptitle("Графики", fontsize=20)
+
+plt.tight_layout()
+plt.show()
+
+# 8
+print("№8")
+
+
+def show_grid(style: str):
+    plt.style.use(f'{style}')
+    fig, axs = plt.subplots(2, 2, figsize=(8, 6))
+
+    axs[0, 0].plot(arguments, values, label="sin(2x)/cos(x)")
+    axs[0, 0].set_title("График 1")  # Верхний левый
+    axs[0, 0].legend()
+    axs[0, 0].set_facecolor('#f0f8ff')
+
+    axs[0, 1].plot(arguments, values, label="sin(2x)/cos(x)")
+    axs[0, 1].set_title("График 2")  # Верхний правый
+    axs[0, 1].legend()
+    axs[0, 1].set_facecolor('#ffe4e1')
+
+    axs[1, 0].pie(counts, labels=unique, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
+    axs[1, 0].set_title("График 3")  # Нижний левый
+    axs[1, 0].set_facecolor('#e6ffe6')
+
+    ax_3d = fig.add_subplot(2, 2, 4, projection='3d')
+    ax_3d.plot_surface(X, Y, Z, cmap='viridis')
+    ax_3d.set_title("График 4")
+
+    fig.suptitle("Графики", fontsize=20)
+
+    plt.tight_layout()
+    plt.show()
+    return style
+
+# Демонстрация работы show_grid:
+show_grid("seaborn-v0_8-darkgrid")
+show_grid("ggplot")
+show_grid("Solarize_Light2")
