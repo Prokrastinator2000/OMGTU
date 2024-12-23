@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import sympy as sp
-from Practicum2 import f, NonlinearFunc  # Импорт функций
-from Practicum3 import x1, x2          # Импорт переменных
+from Practice2 import f, NonlinearFunct  # Импорт функций
+from main import uniform_selection, normal_selection          # Импорт переменных
 
 
 # a = 2, b = 3
@@ -13,7 +13,7 @@ print("№1")
 arguments = np.arange(2, 3 + 0.1, 0.1)
 #
 values = np.array([f(x) for x in arguments])
-print(values)
+print(*values)
 
 # 2
 print("№2")
@@ -41,14 +41,14 @@ plt.show()
 # 4
 print("№4")
 
-plt.hist(x2, bins=10, color='blue', edgecolor='black')
+plt.hist(normal_selection, bins=10, color='blue', edgecolor='black')
 
 plt.title("Гистограмма нормального распределения")
 plt.xlabel("Числовые диапазоны")
 plt.ylabel("Частота")
 plt.show()
 
-plt.hist(x1, bins=5, color='green', edgecolor='black')
+plt.hist(uniform_selection, bins=5, color='green', edgecolor='black')
 
 plt.title("Гистограмма равномерного распределения")
 plt.xlabel("Числовые диапазоны")
@@ -58,13 +58,13 @@ plt.show()
 # 5
 print("№5")
 
-uniform_vector_50 = np.random.randint(low=0, high=5, size=50)
+uniform_vector_50 = np.random.randint(low=1, high=5, size=50)
 
-print(uniform_vector_50)
+print(*uniform_vector_50)
 
 unique, counts = np.unique(uniform_vector_50, return_counts=True)
-print(unique)
-print(counts)
+print(*unique)
+print(*counts)
 
 plt.pie(counts, labels=unique, autopct='%1.1f%%', startangle=90, colors=plt.cm.Paired.colors)
 plt.title("Круговая диаграмма частот")
@@ -84,16 +84,16 @@ plt.show()
 
 # 6
 print("№6")
-x_range = np.arange(-10, 10, 0.5)
-y_range = np.arange(-10, 10, 0.5)
+x_range = np.arange(-10, 20, 0.5)
+y_range = np.arange(-10, 20, 0.5)
 
 X, Y = np.meshgrid(x_range, y_range)
-Z = np.array([NonlinearFunc((x, y)) for x, y in zip(np.ravel(X), np.ravel(Y))]).reshape(X.shape)
+Z = NonlinearFunct(X,Y)
 
 
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-ax.contour3D(X, Y, Z, 100, colors="red")
+ax.contour3D(X, Y, Z, 100, colors="blue")
 ax.set_xlabel('x')
 ax.set_ylabel('y')
 ax.set_zlabel('z')
@@ -161,6 +161,7 @@ def show_grid(style: str):
     return style
 
 # Демонстрация работы show_grid:
+show_grid("dark_background")
+show_grid("grayscale")
 show_grid("seaborn-v0_8-darkgrid")
-show_grid("ggplot")
-show_grid("Solarize_Light2")
+#print(plt.style.available)
