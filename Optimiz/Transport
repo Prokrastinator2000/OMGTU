@@ -1,4 +1,6 @@
 import numpy as np
+import math
+inf = math.inf
 
 def Creating_closed_type(Cost_matrix, a_i, b_j):
     if np.sum(a_i) > np.sum(b_j):
@@ -17,11 +19,12 @@ def Creating_closed_type(Cost_matrix, a_i, b_j):
         print("already closed type")
         return Cost_matrix, a_i, b_j
 
+
 def northwest_corner(Cost_matrix, a_i, b_j):
     m = len(a_i)
     n = len(b_j)
     x = np.zeros((m, n))
-
+    x.fill(-1)
     i = 0
     j = 0
 
@@ -38,6 +41,32 @@ def northwest_corner(Cost_matrix, a_i, b_j):
 
     return x
 
+def minimal_value(Cost_matrix, a_i, b_j):
+    m = len(a_i)
+    n = len(b_j)
+    #inf=math.inf
+    x = np.zeros((m, n))
+    x.fill(-1)
+    infinite = np.zeros((m, n))
+    infinite[:][:]=inf
+    #print(infinite,'inf')
+    Cost_matrix = Cost_matrix.astype(float)
+    #while sum(a_i) + sum(b_j) != 0:
+    while np.any(Cost_matrix != infinite):
+        i = np.where(Cost_matrix == np.min(Cost_matrix))[0][0]
+        j = np.where(Cost_matrix == np.min(Cost_matrix))[1][0]
+        x[i][j] = min(a_i[i], b_j[j])
+        a_i[i], b_j[j] = a_i[i] - min(a_i[i], b_j[j]), b_j[j] - min(a_i[i], b_j[j])
+        if a_i[i] == 0:
+            Cost_matrix[i] = inf
+        elif b_j[j] == 0:
+            Cost_matrix[:, j] = inf
+        #print(x)
+        #print(Cost_matrix,infinite )
+        #print((Cost_matrix != infinite).all())
+    return x
+
+
 def calculate_potentials(X, Closed_Cost_Matrix):
     optimal = 0
     m, n = X.shape
@@ -52,7 +81,7 @@ def calculate_potentials(X, Closed_Cost_Matrix):
 
         for i in range(m):
             for j in range(n):
-                if X[i, j] > 0:
+                if X[i, j] >= 0:
 
                     if np.isnan(u[i]) and not np.isnan(v[j]):
                         u[i] = Closed_Cost_Matrix[i, j] - v[j]
@@ -61,6 +90,8 @@ def calculate_potentials(X, Closed_Cost_Matrix):
                     elif not np.isnan(u[i]) and np.isnan(v[j]):
                         v[j] = Closed_Cost_Matrix[i, j] - u[i]
                         changed = True
+                #print("u:", u)
+                #print("v:", v)
 
     print("u:", u)
     print("v:", v)
@@ -68,24 +99,26 @@ def calculate_potentials(X, Closed_Cost_Matrix):
     BestCell = -np.inf
     start_pos_i = -1
     start_pos_j = -1
-
+    #X=X+1
+    #print(X+1)
     for i in range(m):
         for j in range(n):
-            if X[i, j] == 0:
+            if X[i, j] == -1:
                 reduced_cost = u[i] + v[j] - Closed_Cost_Matrix[i, j]
                 if reduced_cost > BestCell:
                     BestCell = reduced_cost
                     start_pos_i = i
                     start_pos_j = j
                 if reduced_cost > 0:
-                    optimal+=1
-    
+                    optimal += 1
+    #X=X-1
 
-    if (start_pos_i == -1 and start_pos_j == -1) or optimal==0:
+    if (start_pos_i == -1 and start_pos_j == -1) or optimal == 0:
         print("Solution is optimal")
         return None, None
 
     return start_pos_i, start_pos_j
+
 
 def find_cycle(mat, pos, dir_row=True, path=None):
     global FLAG_END
@@ -112,10 +145,11 @@ def find_cycle(mat, pos, dir_row=True, path=None):
                     path.pop()
     return path
 
+
 # Пример использования:
-C = np.array([[4,21,12,8,1], [20, 8, 25, 15,23], [17, 1, 11, 5,3], [23, 10, 24, 6,5]])
-Ai = np.array([21, 21, 23, 23])
-Bj = np.array([22, 22, 22, 11,11])
+C = np.array([[40,36,9,20], [26, 11,22,26], [6,3,12,3], [5,37,33,26]])
+Ai = np.array([24,42,23,36])
+Bj = np.array([35,29,21,35])
 
 result = Creating_closed_type(C, Ai, Bj)
 
@@ -129,39 +163,59 @@ else:
     Closed_Cost_Matrix, Ai, Bj = C, Ai, Bj
 
 X = northwest_corner(Closed_Cost_Matrix, Ai.copy(), Bj.copy()).astype(int)
-print("\nМатрица перевозок (X):\n", X)
+X1 = minimal_value(Closed_Cost_Matrix, Ai.copy(), Bj.copy()).astype(int)
+print("\nМатрица перевозок методом северо-западного угла (X):\n", X)
 
+print("\nМатрица перевозок методом минимальной стоимости (X):\n", X1)
+
+#X=X+1
 total_cost = np.sum(X * Closed_Cost_Matrix).astype(int)
+#X=X-1
 print("\nОбщая стоимость перевозок:", total_cost)
-
 # Основной цикл для нахождения оптимального плана
 while True:
     start_pos_i, start_pos_j = calculate_potentials(X, Closed_Cost_Matrix)
-    if start_pos_i is None and start_pos_j is None :
+    if start_pos_i is None and start_pos_j is None:
         break  # Решение оптимально, выходим из цикла
 
     start_points = [(start_pos_i, start_pos_j)]
+    X = X + 1
     for start_point in start_points:
         i, j = start_pos_i, start_pos_j
         X[i][j] = -1
         way = find_cycle(X, start_point)
         X[i][j] = 0
         FLAG_END = False
-        print(way)
+        print(way,'way')
     way = np.array(way)
 
+    print(X)
+    X = X - 1
+    #X = X + 1
     SignsPlus = way[::2]
     SignsMinus = way[1::2]
-    print(SignsPlus)
-    print(SignsMinus)
+    print(SignsPlus,'plus')
+    print(SignsMinus,'minus')
     values = X[SignsMinus[:, 0], SignsMinus[:, 1]]
     min_value = np.min(values)
+    print(values,'values')
+
+    print(np.where(values == np.min(values))[0][0],'min value')
+    k=SignsMinus[np.where(values == np.min(values))[0][0]][0]
+    l=SignsMinus[np.where(values == np.min(values))[0][0]][1]
+    X[k][l] -= 1
+    #print(i,j,'i,j')
+    X[i][j] += 1
     print(min_value)
     X[SignsMinus[:, 0], SignsMinus[:, 1]] -= min_value
     X[SignsPlus[:, 0], SignsPlus[:, 1]] += min_value
     print(X)
+    #X = X - 1
+    print(X)
 
 # Вывод итогового оптимального плана и целевой функции
+#X=X.replace(-1,0)
 print("\nОптимальный план перевозок (X):\n", X)
-total_cost = np.sum(X * Closed_Cost_Matrix).astype(int)
+#X.replace(-1,0)
+total_cost = np.sum((X * Closed_Cost_Matrix)[X * Closed_Cost_Matrix>0]).astype(int)
 print("\nОбщая стоимость перевозок:", total_cost)
