@@ -1,0 +1,22 @@
+import numpy as np
+import math
+from scipy import optimize
+def f(x):
+    return x*np.exp(x)
+a=-2
+b=0
+epsilon =10**(-6)
+while math.fabs(b-a)>2*epsilon:
+    x = (a+b)/2
+    x1=x-epsilon/2
+    x2=x+epsilon/2
+    f1=f(x1)
+    f2=f(x2)
+    if f1>f2:
+        a=x1
+    else:
+        b=x2
+print(f(a+b)/2)
+
+minimum=optimize.minimize(f,x0=0)
+print(minimum)
