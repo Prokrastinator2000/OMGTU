@@ -1,22 +1,54 @@
 import numpy as np
 import math
 from scipy import optimize
+
 def f(x):
     return x*np.exp(x)
 a=-2
 b=0
 epsilon =10**(-6)
-while math.fabs(b-a)>2*epsilon:
-    x = (a+b)/2
-    x1=x-epsilon/2
-    x2=x+epsilon/2
-    f1=f(x1)
-    f2=f(x2)
-    if f1>f2:
-        a=x1
-    else:
-        b=x2
-print(f(a+b)/2)
+#minimum=optimize.minimize(f,x0=0)
+#print(minimum)
+def dichotomy_method(a,b,epsilon):
+    while math.fabs(b-a)>2*epsilon:
+        x = (a+b)/2
+        x1=x-epsilon/2
+        x2=x+epsilon/2
+        f1=f(x1)
+        f2=f(x2)
+        if f1>f2:
+            a=x1
+        else:
+            b=x2
+    min_x=(a+b)/2
+    min_f=f(min_x)
+    return min_x,min_f
 
-minimum=optimize.minimize(f,x0=0)
-print(minimum)
+dichotomy_result=dichotomy_method(a,b,epsilon)
+print(f"Минимум функции f(x): {dichotomy_result[1]} в точке x: {dichotomy_result[0]} ")
+
+def golden_section_method(a,b,epsilon):
+    tau=(math.sqrt(5)-1)/2
+    L=math.fabs(b-a)
+    while math.fabs(b-a)>epsilon:
+        x1=a+L*tau
+        x2=b-L*tau
+        f1=f(x1)
+        f2=f(x2)
+        if f1>f2:
+            b=x1
+            f1=f2
+            x1=x2
+            L=b-a
+            x2=a+(b-x1)
+            f2=f(x2)
+        else:
+            a=x2
+            f2=f1
+            x2=x1
+            L=b-a
+            x1=b-(x2-a)
+            f1=f(x1)
+    return min(f1,f2)
+golden_result =golden_section_method(a,b,epsilon)
+print(f"Минимум функции методом золотого сечения: {golden_result}")
