@@ -1,0 +1,137 @@
+import bitarray
+import matplotlib.pyplot as plt
+
+# Реализация собственных хеш-функций
+def hash_function_1(item, seed):
+    """Простая хеш-функция на основе умножения и сложения."""
+    hash_value = 0
+    for char in str(item):
+        hash_value = (hash_value * seed + ord(char)) % (2**32)
+    return hash_value
+
+def hash_function_2(item, seed):
+    """Другая хеш-функция, использующая XOR и сдвиги."""
+    hash_value = 5381
+    for char in str(item):
+        hash_value = ((hash_value << 5) + hash_value) ^ ord(char)
+    return hash_value % (2**32)
+
+def hash_function_3(item, seed):
+    """Хеш-функция на основе простого числа и модуля."""
+    prime = 31
+    hash_value = 0
+    for char in str(item):
+        hash_value = (hash_value * prime + ord(char)) % (2**32)
+    return hash_value
+
+# Класс фильтра Блума
+class BloomFilter:
+    def __init__(self, m, k):
+        self.m = m  # Размер битового массива
+        self.k = k  # Количество хеш-функций
+        self.bit_array = bitarray.bitarray(m)
+        self.bit_array.setall(0)
+
+    def _get_hashes(self, item):
+        """Генерация k хеш-значений для элемента."""
+        hashes = []
+        for i in range(self.k):
+            # Используем разные seed для каждой хеш-функции
+            seed = i + 1  # seed может быть любым числом, например, i + 1
+            if i % 3 == 0:
+                hash_value = hash_function_1(item, seed)
+            elif i % 3 == 1:
+                hash_value = hash_function_2(item, seed)
+            else:
+                hash_value = hash_function_3(item, seed)
+            hashes.append(hash_value % self.m)  # Приводим к диапазону [0, m-1]
+        return hashes
+
+    def add(self, item):
+        """Добавление элемента в фильтр Блума."""
+        for index in self._get_hashes(item):
+            self.bit_array[index] = 1
+
+    def contains(self, item):
+        """Проверка наличия элемента в фильтре Блума."""
+        for index in self._get_hashes(item):
+            if self.bit_array[index] == 0:
+                return False
+        return True
+
+    def union(self, other):
+        """Объединение двух фильтров Блума."""
+        if self.m != other.m or self.k != other.k:
+            raise ValueError("Фильтры Блума должны иметь одинаковые размеры и количество хеш-функций")
+        new_filter = BloomFilter(self.m, self.k)
+        new_filter.bit_array = self.bit_array | other.bit_array
+        return new_filter
+
+    def intersection(self, other):
+        """Пересечение двух фильтров Блума."""
+        if self.m != other.m or self.k != other.k:
+            raise ValueError("Фильтры Блума должны иметь одинаковые размеры и количество хеш-функций")
+        new_filter = BloomFilter(self.m, self.k)
+        new_filter.bit_array = self.bit_array & other.bit_array
+        return new_filter
+
+# Функция для оценки ложноположительных срабатываний
+def false_positive_rate(bloom_filter, test_items, existing_items):
+    false_positives = 0
+    for item in test_items:
+        if item not in existing_items and bloom_filter.contains(item):
+            false_positives += 1
+    return false_positives / len(test_items)
+
+# Функция для исследования зависимости ложноположительных срабатываний от m и k
+def evaluate_false_positives(m_values, k_values, test_items, existing_items):
+    results = []
+    for m in m_values:
+        for k in k_values:
+            bloom_filter = BloomFilter(m, k)
+            for item in existing_items:
+                bloom_filter.add(item)
+            rate = false_positive_rate(bloom_filter, test_items, existing_items)
+            results.append((m, k, rate))
+    return results
+
+# Основная программа
+if __name__ == "__main__":
+    # Параметры
+    m_values = [100, 500, 1000, 2000]  # Размеры битового массива
+    k_values = [1, 2, 3, 4, 5]         # Количество хеш-функций
+
+    # Элементы для добавления в фильтр Блума
+    existing_items = [
+        "apple", "banana", "cherry", "date", "elderberry", "fig", "grape",
+        "honeydew", "kiwi", "lemon", "mango", "nectarine", "orange", "papaya",
+        "quince", "raspberry", "strawberry", "tangerine", "watermelon"
+    ]
+
+    # Тестовые элементы (включая те, которых нет в existing_items)
+    test_items = [
+        "apple", "banana", "cherry", "date", "elderberry", "fig", "grape",
+        "honeydew", "kiwi", "lemon", "mango", "nectarine", "orange", "papaya",
+        "quince", "raspberry", "strawberry", "tangerine", "watermelon",
+        "apricot", "blackberry", "blueberry", "coconut", "dragonfruit", "guava",
+        "lime", "lychee", "passionfruit", "peach", "pear", "pineapple", "plum",
+        "pomegranate", "starfruit", "tomato"
+    ]
+
+    # Оценка ложноположительных срабатываний
+    results = evaluate_false_positives(m_values, k_values, test_items, existing_items)
+
+    # Вывод таблицы результатов
+    print("m\tk\tFalse Positive Rate")
+    for result in results:
+        print(f"{result[0]}\t{result[1]}\t{result[2]:.4f}")
+
+    # Построение графиков
+    for k in k_values:
+        rates = [result[2] for result in results if result[1] == k]
+        plt.plot(m_values, rates, label=f'k={k}')
+
+    plt.xlabel('Размер битового массива (m)')
+    plt.ylabel('Процент ложноположительных срабатываний')
+    plt.legend()
+    plt.show()
